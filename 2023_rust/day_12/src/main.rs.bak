@@ -1,0 +1,161 @@
+use core::num;
+
+fn main() {
+    solve_a();
+}
+
+fn solve_a() {
+    let rows = read_input();
+
+    let mut sum = 0u64;
+    for row in rows {
+        let res = solve_row(&row.springs, &row.report);
+        // println!("{}", res);
+        sum += res as u64;
+    }
+
+    println!("{}", sum);
+}
+
+fn solve_row(springs: &[char], report: &[usize]) -> usize {
+    let mut result = 0usize;
+
+    // last call of recursion.
+    if report.len() == 1 {
+        let mut char_index = 0;
+
+        while let Some(number_position_index) =
+            check_number(&springs[char_index..], report[0], report.len() == 1)
+        {
+            char_index += number_position_index + 1;
+
+            // found a fixed location for number of #s
+            if springs[char_index - 1] == '#' {
+                return result + 1;
+            }
+
+            if springs[char_index + report[0] - 1..].contains(&'#') {
+                continue;
+            }
+
+            result += 1;
+
+            if number_position_index + report[0] + 1 > springs.len() {
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    let mut char_index = 0;
+
+    while let Some(number_position_index) =
+        check_number(&springs[char_index..], report[0], report.len() == 1)
+    {
+        if number_position_index + char_index + report[0] + 1 > springs.len() {
+            return result;
+        }
+
+        let sub_result = solve_row(
+            &springs[number_position_index + char_index + report[0] + 1..],
+            &report[1..],
+        );
+
+        // if sub_result == 0 {
+        //     return result;
+        // }
+
+        result += sub_result;
+
+        // found a fixed location for number of #s
+        if springs[char_index + number_position_index] == '#' {
+            break;
+        }
+
+        char_index += number_position_index + 1;
+
+        // result += 1;
+    }
+
+    result
+}
+
+// check_number will check the puzzle and returns the first index
+// that the num number of # can be placed.
+fn check_number(spring_puzzle: &[char], num: usize, is_last: bool) -> Option<usize> {
+    let mut pattern = vec!['#'; num];
+    if !is_last {
+        pattern.push('.');
+    }
+
+    
+    'window_loop: for (i, window) in spring_puzzle.windows(pattern.len()).enumerate() {
+        let mut has_damage = false;
+        for (idx, ch) in window.iter().enumerate() {
+            if ch == pattern.get(idx).unwrap() {
+                if *ch == '#' {
+                    has_damage = true;
+                }
+
+                continue;
+            }
+
+            if *ch == '?' {
+                continue;
+            }
+
+            if *ch == '.' && has_damage {
+                return None;
+            }
+
+            continue 'window_loop;
+        }
+
+        // check if there are any unattended #
+        if is_last && spring_puzzle[i + pattern.len()..].contains(&'#') {
+            return None;
+        }
+
+        return Some(i);
+
+        // if window.iter().enumerate().all(|(idx, ch)| {
+        //     if ch == pattern.get(idx).unwrap() || *ch == '?' {
+        //         return true;
+        //     }
+
+        //     false
+        // }) {
+        //     if spring_puzzle[..i].contains(&'.') {
+        //         return None;
+        //     }
+
+        //     return Some(i);
+        // }
+    }
+
+    None
+}
+struct Row {
+    springs: Vec<char>,
+    report: Vec<usize>,
+}
+
+fn read_input() -> Vec<Row> {
+    let input = include_str!("example")
+        .lines()
+        .map(|line| {
+            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+
+            Row {
+                springs: parts[0].chars().collect(),
+                report: parts[1]
+                    .split(',')
+                    .map(|num| num.parse::<usize>().unwrap())
+                    .collect(),
+            }
+        })
+        .collect::<Vec<_>>();
+
+    input
+}
