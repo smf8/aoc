@@ -83,3 +83,6 @@ tests/rustdoc-gui/src/**.lock
 2023_rust/.idea
 2023_rust/**/target
 rust_2024/target
+*example.txt
+*input.txt
+*main.txt
