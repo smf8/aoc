@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 fn main() {
-    let example = include_str!("../../inputs/day1/example.txt");
-    let main_input = include_str!("../../inputs/day1/main.txt");
+    let example = include_str!("../../inputs/day3/example.txt");
+    let main_input = include_str!("../../inputs/day3/main.txt");
 
     solve_a(example);
     solve_a(main_input);
