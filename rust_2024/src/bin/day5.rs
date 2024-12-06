@@ -54,7 +54,8 @@ fn split_ordered(input: &str) -> (Vec<Vec<i32>>, Vec<Vec<i32>>, HashSet<(i32, i3
 fn solve_a(input: &str) {
     let (ordered, _, _) = split_ordered(input);
 
-    let result = ordered.iter()
+    let result = ordered
+        .iter()
         .fold(0, |acc, x| acc + x.get(x.len() / 2).unwrap());
 
     println!("part 1: {}", result);
@@ -67,8 +68,8 @@ fn solve_a(input: &str) {
 fn solve_b(input: &str) {
     let (_, mut not_ordered, rules) = split_ordered(input);
 
-    for order in not_ordered.iter_mut(){
-        order.sort_by(|&x, &y| match rules.contains(&(y,x)) {
+    for order in not_ordered.iter_mut() {
+        order.sort_by(|&x, &y| match rules.contains(&(y, x)) {
             true => Ordering::Greater,
             false => Ordering::Less,
         })
