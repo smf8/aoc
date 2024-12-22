@@ -133,8 +133,7 @@ fn find_all_shortest_paths(
             &distances,
             &mut all_paths,
         );
-        
-        
+
         paths.insert(*pair, all_paths);
     }
 
@@ -297,7 +296,8 @@ fn solve(input: &str, steps: usize) {
         let mut min_number_res = usize::MAX;
         for movement_map in generate_movements() {
             for number_str in number_dirs.iter() {
-                min_number_res = movements_count(steps, number_str, &movement_map).min(min_number_res);
+                min_number_res =
+                    movements_count(steps, number_str, &movement_map).min(min_number_res);
             }
         }
 
