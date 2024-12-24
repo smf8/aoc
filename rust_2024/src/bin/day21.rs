@@ -1,10 +1,6 @@
-use petgraph::graph::{EdgeIndex, Node, NodeIndex};
-use petgraph::visit::NodeRef;
-use petgraph::{algo, Graph, Undirected};
+use petgraph::graph::{EdgeIndex, NodeIndex};
+use petgraph::{algo, Graph};
 use std::collections::HashMap;
-use std::fmt::format;
-use std::hash::Hash;
-use std::ops::Deref;
 
 fn main() {
     let example = include_str!("../../inputs/day21/example.txt");
@@ -21,7 +17,7 @@ fn number_all_paths(number: String) -> Vec<String> {
     let mut numpad_graph: Graph<(i32, i32), char> = Graph::new();
 
     let key0 = numpad_graph.add_node((3, 1));
-    let keyA = numpad_graph.add_node((3, 2));
+    let key_a = numpad_graph.add_node((3, 2));
     let key1 = numpad_graph.add_node((2, 0));
     let key2 = numpad_graph.add_node((2, 1));
     let key3 = numpad_graph.add_node((2, 2));
@@ -43,14 +39,14 @@ fn number_all_paths(number: String) -> Vec<String> {
         ('7', key7),
         ('8', key8),
         ('9', key9),
-        ('A', keyA),
+        ('A', key_a),
     ]);
 
     numpad_graph.extend_with_edges([
-        (key0, keyA, '>'),
+        (key0, key_a, '>'),
         (key0, key2, '^'),
-        (keyA, key0, '<'),
-        (keyA, key3, '^'),
+        (key_a, key0, '<'),
+        (key_a, key3, '^'),
         (key1, key2, '>'),
         (key1, key4, '^'),
         (key2, key3, '>'),
@@ -63,7 +59,7 @@ fn number_all_paths(number: String) -> Vec<String> {
         (key5, key4, '<'),
         (key3, key2, '<'),
         (key3, key6, '^'),
-        (key3, keyA, 'v'),
+        (key3, key_a, 'v'),
         (key4, key5, '>'),
         (key4, key7, '^'),
         (key4, key1, 'v'),
@@ -79,7 +75,7 @@ fn number_all_paths(number: String) -> Vec<String> {
         (key9, key6, 'v'),
     ]);
 
-    let mut current_node = keyA;
+    let mut current_node = key_a;
 
     let number_paths = find_all_shortest_paths(&numpad_graph);
 
@@ -151,7 +147,7 @@ fn dfs_iterative(
     let mut stack = vec![(start, vec![])];
     let mut visited = HashMap::new();
 
-    while let Some((current, mut path)) = stack.pop() {
+    while let Some((current, path)) = stack.pop() {
         if current == end {
             if path.len() == shortest_distance {
                 all_paths.push(path.clone());
@@ -243,7 +239,7 @@ fn generate_movements() -> Vec<HashMap<&'static str, Vec<String>>> {
                 .collect::<Vec<_>>();
 
             let mut new_movements = all_movements.clone();
-            for mut movement in new_movements.iter_mut() {
+            for movement in new_movements.iter_mut() {
                 movement.insert(pair, replacement_vec.clone());
             }
 
@@ -258,7 +254,7 @@ fn generate_movements() -> Vec<HashMap<&'static str, Vec<String>>> {
 
 fn movements_count(
     steps: usize,
-    number: &String,
+    number: &str,
     movement_map: &HashMap<&'static str, Vec<String>>,
 ) -> usize {
     let mut case = number.chars().collect::<Vec<_>>();
