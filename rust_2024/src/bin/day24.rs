@@ -47,7 +47,7 @@ fn solve_a(input: &str) {
         known_values.insert(gate.3, result);
     }
 
-    let mut z_list = known_values
+    let z_list = known_values
         .iter()
         .filter(|(k, v)| k.starts_with("z") && **v)
         .collect::<Vec<_>>();
