@@ -64,15 +64,14 @@ fn solve_b(input: &str) {
 
     ranges.sort_by(|a, b| a.0.cmp(&b.0));
 
-
     let mut result = 0;
     let mut range_start = ranges[0].0;
     let mut range_end = ranges[0].1;
 
-    for  range in ranges.iter() {
+    for range in ranges.iter() {
         // we have reached a non-overlapping range
         if range.0 > range_end {
-            result += range_end - range_start +1;
+            result += range_end - range_start + 1;
 
             range_start = range.0;
             range_end = range.1;
@@ -84,7 +83,7 @@ fn solve_b(input: &str) {
     }
 
     // add the final overlapping range
-    result += range_end - range_start+1;
+    result += range_end - range_start + 1;
 
     println!("Part2: {}", result);
 }
